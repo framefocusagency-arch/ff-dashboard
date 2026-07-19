@@ -440,7 +440,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);fo
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxQJpv66RnFMj6IZYYn0Q9PTAsVOVA0moBVhguqFKoeyPS_0RAMZ2SbVoxw6PsY_lXa-g/exec';
+const SCRIPT_URL='https://summer-union-16f8.frame-focus-agency.workers.dev';
 
 const MONTHS_LIST=[
   ['2025-07','Лип 2025'],['2025-08','Сер 2025'],['2025-09','Вер 2025'],
@@ -500,7 +500,11 @@ async function loadFromCloud(){
   setSync('sync-loading','завантаження...');
   try{
     const key='ff_dash_'+currentMonth;
-    const res=await fetch(SCRIPT_URL+'?key='+encodeURIComponent(key));
+    const res=await fetch(SCRIPT_URL+'?key='+encodeURIComponent(key),{
+      method:'GET',
+      mode:'cors',
+      redirect:'follow'
+    });
     const text=await res.text();
     const parsed=JSON.parse(text);
     if(parsed&&Object.keys(parsed).length>0){
@@ -519,7 +523,12 @@ async function loadFromCloud(){
 async function saveToCloud(){
   setSync('sync-loading','збереження...');
   try{
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({key:'ff_dash_'+currentMonth,value:JSON.stringify(data)})});
+    await fetch(SCRIPT_URL,{
+      method:'POST',
+      mode:'cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:'ff_dash_'+currentMonth,value:JSON.stringify(data)})
+    });
     setSync('sync-ok','збережено');
   }catch(e){setSync('sync-err','помилка збереження');}
 }
